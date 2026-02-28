@@ -16,8 +16,8 @@ const int CPU_PADDLE_HEIGHT = 100;
 const int CPU_PADDLE_WIDTH = 25;
 const int CPU_PADDLE_SPEED = 8;
 
-const int PLAYER_SCORE = 0;
-const int CPU_SCORE = 0;
+int player_score = 0;
+int cpu_score = 0;
 
 class Ball {
 public:
@@ -77,6 +77,16 @@ public:
     if (x + radius >= SCREEN_WIDTH || x - radius <= 0) {
       speed_x = -1 * speed_x;
     }
+  }
+
+  // not used currently
+  void resetBall() {
+    x = (float) SCREEN_HEIGHT / 2;
+    y = (float) SCREEN_WIDTH / 2;
+
+    int speedChoices[2] = {-1, 1};
+    speed_x *= speedChoices[GetRandomValue(0, 1)];
+    speed_y *= speedChoices[GetRandomValue(0, 1)];
   }
 };
 
@@ -229,6 +239,8 @@ int main() {
     ball.Draw();
     playerPaddle.Draw();
     computerPaddle.Draw();
+    DrawText(TextFormat("%i", player_score), SCREEN_WIDTH / 2 - SCREEN_WIDTH / 4, 20, 80, WHITE);
+    DrawText(TextFormat("%i", cpu_score), SCREEN_WIDTH / 2 + SCREEN_WIDTH / 4, 20, 80, WHITE);
 
     // Check for collision //
 
@@ -258,6 +270,14 @@ int main() {
       // ball.y *= -1;
 
       cout << "colloide" << endl;
+    }
+
+    if (ball.x + ball.radius >= SCREEN_WIDTH) {
+      player_score++;
+    }
+
+    if (ball.x - ball.radius <= 0) {
+      cpu_score++;
     }
 
     // Update game elements
